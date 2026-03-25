@@ -1,0 +1,39 @@
+name: Reporte diario Guatecrédito
+
+on:
+  schedule:
+    # 13:00 UTC ≈ 07:00 Guatemala (UTC-6). Ajusta según necesidad.
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+jobs:
+  reporte:
+    runs-on: ubuntu-latest
+    env:
+      MPLCONFIGDIR: ${{ runner.temp }}/matplotlib-cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar reporte
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          LEAD_COLLECTION: ${{ secrets.LEAD_COLLECTION }}
+          LOANS_COLLECTION: ${{ secrets.LOANS_COLLECTION }}
+          USERS_COLLECTION: ${{ secrets.USERS_COLLECTION }}
+          ECOSYSTEM_ID: ${{ secrets.ECOSYSTEM_ID }}
+          FECHA_LANZAMIENTO: ${{ secrets.FECHA_LANZAMIENTO }}
+          EMAIL_REMITENTE: ${{ secrets.EMAIL_REMITENTE }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_DESTINO: ${{ secrets.EMAIL_DESTINO }}
+        run: python scripts/reporte.py

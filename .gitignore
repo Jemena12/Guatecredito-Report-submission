@@ -1,0 +1,22 @@
+# Entorno local
+.env
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Salidas del reporte (regenerables)
+scripts/reportes/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
