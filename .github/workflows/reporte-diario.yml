@@ -2,7 +2,6 @@ name: Reporte diario Guatecrédito
 
 on:
   schedule:
-    # 13:00 UTC ≈ 07:00 Guatemala (UTC-6). Ajusta según necesidad.
     - cron: "0 13 * * *"
   workflow_dispatch:
 
@@ -10,7 +9,8 @@ jobs:
   reporte:
     runs-on: ubuntu-latest
     env:
-      MPLCONFIGDIR: ${{ runner.temp }}/matplotlib-cache
+      MPLCONFIGDIR: /tmp/matplotlib-cache
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,7 +22,9 @@ jobs:
           cache: pip
 
       - name: Instalar dependencias
-        run: pip install -r requirements.txt
+        run: |
+          mkdir -p "$MPLCONFIGDIR"
+          pip install -r requirements.txt
 
       - name: Ejecutar reporte
         env:
